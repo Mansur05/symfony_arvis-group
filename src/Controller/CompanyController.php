@@ -10,6 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class CompanyController extends AbstractController
 {
     /**
+     * Render company by id (company id)
+     *
      * @Route("/company/{id}", name="index")
      * @param Company $company
      * @return Response

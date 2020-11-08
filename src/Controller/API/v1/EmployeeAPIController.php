@@ -21,12 +21,14 @@ class EmployeeAPIController extends AbstractController
 {
 
     /**
-     * @Route("/getAllFromBranch/{id}", methods={"GET"})
+     * Returns all employees from branch by id (branch id)
+     *
+     * @Route("/readAllFromBranch/{id}", methods={"GET"})
      * @param Branch $branch
      * @param SerializerInterface $serializer
      * @return JsonResponse
      */
-    public function getAllFromBranch(Branch $branch, SerializerInterface $serializer): JsonResponse
+    public function readAllFromBranch(Branch $branch, SerializerInterface $serializer): JsonResponse
     {
         $employees = $serializer->normalize(
             $branch->getEmployees(),

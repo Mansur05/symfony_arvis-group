@@ -21,9 +21,12 @@ class CompanyAPIController extends AbstractController
 {
 
     /**
+     * Returns company info
+     *
      * @Route("/read/{id}", methods={"GET"})
      * @param Company $company
      * @param SerializerInterface $serializer
+     * @return JsonResponse
      */
     public function read(Company $company, SerializerInterface $serializer): JsonResponse
     {

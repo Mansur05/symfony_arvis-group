@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Company {{ company.name }}!{% endblock %}
+{% block title %}Company {{ company.name }}{% endblock %}
 
 {% block body %}
 
@@ -12,9 +12,7 @@
                     <div class="col-3 p-3">
                         <h3 class="text-center">{{ branch.name }}</h3>
                         <span>{{ branch.description }}</span>
-                        <button class="btn btn-block btn-secondary" onclick="$(this).next('ul').slideToggle()">
-                            Employees
-                        </button>
+                        <button class="btn btn-block btn-secondary" onclick="$(this).next('ul').slideToggle()">Employees</button>
                         <ul class="list-group mt-3" style="display: none;">
                             {% for employee in branch.employees %}
                                 <li class="list-group-item">{{ employee.name }} | {{ employee.position }}</li>
@@ -29,9 +27,7 @@
     {# WITH AJAX #}
     <div class="container mb-5">
         <div class="mt-5 text-center border-bottom pb-3">
-            <button class="btn btn-block btn-secondary" onclick="renderCompany({{ company.id }}, $(this))">Get company
-                with ajax
-            </button>
+            <button class="btn btn-block btn-secondary" onclick="renderCompany({{ company.id }}, $(this))">Get company with ajax</button>
             <div style="display: none;"></div>
         </div>
     </div>
@@ -56,12 +52,7 @@
 
                     let render;
                     render = Mustache.render(
-                        `
-                            <h1><% name %> with ajax</h1>
-                            <button class="btn btn-block btn-secondary" onclick="renderBranches(<% id %>, $(this))">Get all branches with ajax
-                            </button>
-                            <div class="p-3 row" style="display: none;"><div>
-                            `,
+                        `<h1><% name %> with ajax</h1><button class="btn btn-block btn-secondary" onclick="renderBranches(<% id %>, $(this))">Get all branches with ajax</button><div class="p-3 row" style="display: none;"><div>`,
                         view,
                         {},
                         ['<%', '%>']
@@ -97,14 +88,7 @@
 
                         let render;
                         render = Mustache.render(
-                            `
-                            <div class="col-3 p-3">
-                            <h3 class="text-center"><% name %></h3>
-                            <span><% branch.description %></span>
-                            <button class="btn btn-block btn-secondary" onclick="renderEmployees(<% id %>, $(this))">Get employee's list</button>
-                            <ul class="list-group mt-3" style="display: none;"></ul>
-                            </div>
-                            `,
+                            `<div class="col-3 p-3"><h3 class="text-center"><% name %></h3><span><% branch.description %></span><button class="btn btn-block btn-secondary" onclick="renderEmployees(<% id %>, $(this))">Get employee's list</button><ul class="list-group mt-3" style="display: none;"></ul></div>`,
                             view,
                             {},
                             ['<%', '%>']

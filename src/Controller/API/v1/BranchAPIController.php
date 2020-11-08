@@ -22,12 +22,14 @@ class BranchAPIController extends AbstractController
 {
 
     /**
-     * @Route("/getAllFromCompany/{id}", methods={"GET"})
+     * Returns all branches from company by id (company id)
+     *
+     * @Route("/readAllFromCompany/{id}", methods={"GET"})
      * @param Company $company
      * @param SerializerInterface $serializer
      * @return JsonResponse
      */
-    public function getAllFromCompany(Company $company, SerializerInterface $serializer): JsonResponse
+    public function readAllFromCompany(Company $company, SerializerInterface $serializer): JsonResponse
     {
         $branches = $serializer->normalize(
             $company->getBranches(), null,
