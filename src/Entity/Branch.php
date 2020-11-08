@@ -36,6 +36,7 @@ class Branch
 
     /**
      * @ORM\OneToMany(targetEntity=Employee::class, mappedBy="branch")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $employees;
 

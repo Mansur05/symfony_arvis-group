@@ -18,6 +18,18 @@ class CompanyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Company::class);
     }
+
+    public function getWithSortedEmployees(int $id, string $sort = 'alphabetic')
+    {
+        $company = $this->find($id);
+        if (null === $company) return null;
+
+        $branches = $company->getBranches();
+        foreach ($branches as $branch) {
+            $employees = $branch->getEmployees()->toArray();
+        }
+    }
+
     // /**
     //  * @return Company[] Returns an array of Company objects
     //  */

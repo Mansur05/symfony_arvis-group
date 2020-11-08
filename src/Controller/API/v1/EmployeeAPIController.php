@@ -28,12 +28,13 @@ class EmployeeAPIController extends AbstractController
      */
     public function getAllFromBranch(Branch $branch, SerializerInterface $serializer): Response
     {
-        $employees = $branch->getEmployees()->toArray();
-        foreach ($employees as $index => $employee) {
-            $employees[$index] = $serializer->normalize($employee, null, [AbstractNormalizer::ATTRIBUTES => ['name', 'position']]);
-        }
-
-        sort($employees);
+        $employees = $serializer->normalize(
+            $branch->getEmployees()->toArray(),
+            null,
+            [
+                AbstractNormalizer::ATTRIBUTES => ['name', 'position']
+            ]
+        );
 
         return $this->json(['status' => 'success', 'data' => $employees]);
     }

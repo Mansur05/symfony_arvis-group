@@ -16,7 +16,7 @@
                             Employees
                         </button>
                         <ul class="list-group mt-3" style="display: none;">
-                            {% for employee in branch.employees|sort((a, b) => a.name <=> b.name) %}
+                            {% for employee in branch.employees %}
                                 <li class="list-group-item">{{ employee.name }} | {{ employee.position }}</li>
                             {% endfor %}
                         </ul>
