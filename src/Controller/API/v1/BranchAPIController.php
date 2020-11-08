@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class BranchAPIController
+ *
  * @Route("/api/v1/branch")
  * @package App\Controller\API\v1
  */

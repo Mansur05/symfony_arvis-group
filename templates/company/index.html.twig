@@ -27,15 +27,12 @@
     </div>
 
     {# WITH AJAX #}
-    <div class="container">
+    <div class="container mb-5">
         <div class="mt-5 text-center border-bottom pb-3">
-            <h1>{{ company.name }} with ajax</h1>
-            <button class="btn btn-block btn-secondary"
-                    onclick="renderBranches({{ company.id }}, $(this).next('div'))">Get all branches
+            <button class="btn btn-block btn-secondary" onclick="renderCompany({{ company.id }}, $(this))">Get company
+                with ajax
             </button>
-            <div class="p-3 row" style="display: none;">
-
-            </div>
+            <div style="display: none;"></div>
         </div>
     </div>
 
@@ -44,7 +41,91 @@
 {% block javascripts %}
 
     <script type="text/javascript">
-        function renderEmployees(branchID, object) {
+        function renderCompany(companyID, currentObject) {
+            let object = $(currentObject).next('div');
+            $(currentObject).remove();
+            $.ajax({
+                url: '/api/v1/company/read/' + companyID,
+                method: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    let view = {
+                        id: data['data']['id'],
+                        name: data['data']['name'],
+                    }
+
+                    let render;
+                    render = Mustache.render(
+                        `
+                            <h1><% name %> with ajax</h1>
+                            <button class="btn btn-block btn-secondary" onclick="renderBranches(<% id %>, $(this))">Get all branches with ajax
+                            </button>
+                            <div class="p-3 row" style="display: none;"><div>
+                            `,
+                        view,
+                        {},
+                        ['<%', '%>']
+                    );
+
+                    $(object).html($(object).html() + render);
+                    console.log($(object).html())
+                },
+                error: function () {
+                    alert('error');
+                    location.reload();
+                }
+            });
+
+            $(object).slideToggle();
+        }
+
+        function renderBranches(companyID, currentObject) {
+            let object = $(currentObject).next('div');
+            $(currentObject).remove();
+
+            $.ajax({
+                url: '/api/v1/branch/getAllFromCompany/' + companyID,
+                method: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data.data, (index, value) => {
+                        let view = {
+                            id: value['id'],
+                            name: value['name'],
+                            description: value['description'],
+                        }
+
+                        let render;
+                        render = Mustache.render(
+                            `
+                            <div class="col-3 p-3">
+                            <h3 class="text-center"><% name %></h3>
+                            <span><% branch.description %></span>
+                            <button class="btn btn-block btn-secondary" onclick="renderEmployees(<% id %>, $(this))">Get employee's list</button>
+                            <ul class="list-group mt-3" style="display: none;"></ul>
+                            </div>
+                            `,
+                            view,
+                            {},
+                            ['<%', '%>']
+                        );
+
+                        $(object).html($(object).html() + render);
+                    });
+                },
+                error: function () {
+                    alert('error');
+                    location.reload();
+                }
+            });
+
+            $(object).slideToggle();
+        }
+
+        function renderEmployees(branchID, currentObject) {
+            let object = $(currentObject).next('ul');
+            $(currentObject).remove();
+
             $.ajax({
                 url: '/api/v1/employee/getAllFromBranch/' + branchID,
                 method: 'get',
@@ -72,47 +153,7 @@
                 }
             });
 
-            object.slideToggle();
-        }
-
-        function renderBranches(companyID, object) {
-            $.ajax({
-                url: '/api/v1/branch/getAllFromCompany/' + companyID,
-                method: 'get',
-                dataType: 'json',
-                success: function (data) {
-                    $.each(data.data, (index, value) => {
-                        let view = {
-                            id: value['id'],
-                            name: value['name'],
-                            description: value['description'],
-                        }
-
-                        let render;
-                        render = Mustache.render(
-                            `
-                            <div class="col-3 p-3">
-                            <h3 class="text-center"><% name %></h3>
-                            <span><% branch.description %></span>
-                            <button class="btn btn-block btn-secondary" onclick="renderEmployees(<% id %>, $(this).next('ul'))">Get employee's list</button>
-                            <ul class="list-group mt-3" style="display: none;"></ul>
-                            </div>
-                            `,
-                            view,
-                            {},
-                            ['<%', '%>']
-                        );
-
-                        $(object).html($(object).html() + render);
-                    });
-                },
-                error: function () {
-                    alert('error');
-                    location.reload();
-                }
-            });
-
-            object.slideToggle();
+            $(object).slideToggle();
         }
     </script>
 
