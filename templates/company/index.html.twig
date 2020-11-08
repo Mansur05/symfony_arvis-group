@@ -30,15 +30,11 @@
     <div class="container">
         <div class="mt-5 text-center border-bottom pb-3">
             <h1>{{ company.name }} with ajax</h1>
-            <div class="row mt-3">
-                {% for branch in company.branches %}
-                    <div class="col-3 p-3">
-                        <h3 class="text-center">{{ branch.name }}</h3>
-                        <span>{{ branch.description }}</span>
-                        <button class="btn btn-block btn-secondary" onclick="renderEmployees({{ branch.id }}, $(this).next('ul'))">Employees</button>
-                        <ul class="list-group mt-3" style="display: none;"></ul>
-                    </div>
-                {% endfor %}
+            <button class="btn btn-block btn-secondary"
+                    onclick="renderBranches({{ company.id }}, $(this).next('div'))">Get all branches
+            </button>
+            <div class="p-3 row" style="display: none;">
+
             </div>
         </div>
     </div>
@@ -55,7 +51,59 @@
                 dataType: 'json',
                 success: function (data) {
                     $.each(data.data, (index, value) => {
-                        $(object).html($(object).html() + '<li class="list-group-item">' + value.name + ' | ' + value.position + ' </li>');
+                        let view = {
+                            name: value['name'],
+                            position: value['position'],
+                        }
+
+                        let render = Mustache.render(
+                            '<li class="list-group-item"> <% name %> | <% position %></li>',
+                            view,
+                            {},
+                            ['<%', '%>']
+                        );
+
+                        $(object).html($(object).html() + render);
+                    });
+                },
+                error: function () {
+                    alert('error');
+                    location.reload();
+                }
+            });
+
+            object.slideToggle();
+        }
+
+        function renderBranches(companyID, object) {
+            $.ajax({
+                url: '/api/v1/branch/getAllFromCompany/' + companyID,
+                method: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data.data, (index, value) => {
+                        let view = {
+                            id: value['id'],
+                            name: value['name'],
+                            description: value['description'],
+                        }
+
+                        let render;
+                        render = Mustache.render(
+                            `
+                            <div class="col-3 p-3">
+                            <h3 class="text-center"><% name %></h3>
+                            <span><% branch.description %></span>
+                            <button class="btn btn-block btn-secondary" onclick="renderEmployees(<% id %>, $(this).next('ul'))">Get employee's list</button>
+                            <ul class="list-group mt-3" style="display: none;"></ul>
+                            </div>
+                            `,
+                            view,
+                            {},
+                            ['<%', '%>']
+                        );
+
+                        $(object).html($(object).html() + render);
                     });
                 },
                 error: function () {
