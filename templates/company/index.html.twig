@@ -12,9 +12,11 @@
                     <div class="col-3 p-3">
                         <h3 class="text-center">{{ branch.name }}</h3>
                         <span>{{ branch.description }}</span>
-                        <button class="btn btn-block btn-secondary" onclick="$(this).next('ul').slideToggle()">Employees</button>
+                        <button class="btn btn-block btn-secondary" onclick="$(this).next('ul').slideToggle()">
+                            Employees
+                        </button>
                         <ul class="list-group mt-3" style="display: none;">
-                            {% for employee in branch.employees %}
+                            {% for employee in branch.employees|sort((a, b) => a.name <=> b.name) %}
                                 <li class="list-group-item">{{ employee.name }} | {{ employee.position }}</li>
                             {% endfor %}
                         </ul>
@@ -23,5 +25,47 @@
             </div>
         </div>
     </div>
+
+    {# WITH AJAX #}
+    <div class="container">
+        <div class="mt-5 text-center border-bottom pb-3">
+            <h1>{{ company.name }} with ajax</h1>
+            <div class="row mt-3">
+                {% for branch in company.branches %}
+                    <div class="col-3 p-3">
+                        <h3 class="text-center">{{ branch.name }}</h3>
+                        <span>{{ branch.description }}</span>
+                        <button class="btn btn-block btn-secondary" onclick="renderEmployees({{ branch.id }}, $(this).next('ul'))">Employees</button>
+                        <ul class="list-group mt-3" style="display: none;"></ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        function renderEmployees(branchID, object) {
+            $.ajax({
+                url: '/api/v1/employee/getByBranch/' + branchID,
+                method: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data.data, (index, value) => {
+                        $(object).html($(object).html() + '<li class="list-group-item">' + value.name + ' | ' + value.position + ' </li>');
+                    });
+                },
+                error: function () {
+                    alert('error');
+                    location.reload();
+                }
+            });
+
+            object.slideToggle();
+        }
+    </script>
 
 {% endblock %}
