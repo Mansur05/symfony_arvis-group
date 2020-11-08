@@ -50,7 +50,7 @@
     <script type="text/javascript">
         function renderEmployees(branchID, object) {
             $.ajax({
-                url: '/api/v1/employee/getByBranch/' + branchID,
+                url: '/api/v1/employee/getAllFromBranch/' + branchID,
                 method: 'get',
                 dataType: 'json',
                 success: function (data) {
